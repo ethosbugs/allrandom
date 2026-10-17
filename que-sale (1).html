@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Qué sale — El generador al azar elegante. Decisiones claras, momentos justos y un toque de magia.">
+<title>Qué sale · Generador al azar elegante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f0;
+  --bg2: #efece5;
+  --card: #ffffff;
+  --ink: #1a1a1c;
+  --mut: #6b6b70;
+  --line: #e2ded4;
+  --acc: #5b4dcf;
+  --acc-soft: #ebe8ff;
+  --acc2: #e85d3a;
+  --success: #1f9d63;
+  --radius: 16px;
+  --shadow: 0 12px 40px rgba(26,26,28,.08);
+  --shadow-sm: 0 4px 16px rgba(26,26,28,.06);
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --bg: #121214;
+  --bg2: #1a1a1e;
+  --card: #1e1e22;
+  --ink: #f2f2f4;
+  --mut: #9a9aa3;
+  --line: #2e2e34;
+  --acc: #8b7cf7;
+  --acc-soft: #2a2640;
+  --acc2: #ff8a6b;
+  --success: #3ecf8e;
+  --shadow: 0 12px 40px rgba(0,0,0,.35);
+  --shadow-sm: 0 4px 16px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+
+/* Header */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: 0 20px;
+}
+.header-inner {
+  max-width: 1100px; margin: 0 auto;
+  height: 64px; display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 18px; letter-spacing: -.02em;
+}
+.logo svg { width: 32px; height: 32px; }
+.nav { display: flex; align-items: center; gap: 6px; }
+.nav a, .nav button {
+  padding: 8px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500;
+  color: var(--mut); transition: .15s;
+}
+.nav a:hover, .nav button:hover, .nav a.active { color: var(--ink); background: var(--bg2); }
+.theme-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--mut);
+  border: 1px solid var(--line);
+}
+.theme-btn:hover { color: var(--ink); border-color: var(--mut); }
+
+/* Sections */
+.section { max-width: 1100px; margin: 0 auto; padding: 64px 20px; }
+.section-sm { padding: 40px 20px; }
+
+/* Hero */
+.hero {
+  text-align: center; padding: 80px 20px 60px;
+  max-width: 720px; margin: 0 auto;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--acc-soft); color: var(--acc);
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(40px, 7vw, 64px);
+  font-weight: 400; line-height: 1.1; letter-spacing: -.03em;
+  margin-bottom: 18px;
+}
+.hero h1 em { font-style: italic; color: var(--acc); }
+.hero p {
+  font-size: 17px; color: var(--mut); max-width: 480px; margin: 0 auto 32px;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ink); color: var(--bg);
+  padding: 14px 28px; border-radius: 999px;
+  font-weight: 600; font-size: 15px;
+  transition: transform .15s, box-shadow .15s;
+}
+.hero-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+/* Features */
+.features {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px; margin-top: 20px;
+}
+.feature {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 28px 24px;
+  transition: box-shadow .2s;
+}
+.feature:hover { box-shadow: var(--shadow-sm); }
+.feature-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--acc-soft); color: var(--acc);
+  display: grid; place-items: center; font-size: 22px; margin-bottom: 16px;
+}
+.feature h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.feature p { font-size: 13.5px; color: var(--mut); line-height: 1.55; }
+
+/* Generators header */
+.gen-head { text-align: center; margin-bottom: 32px; }
+.gen-head h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(28px, 5vw, 40px); font-weight: 400; letter-spacing: -.02em;
+  margin-bottom: 8px;
+}
+.gen-head p { color: var(--mut); font-size: 15px; }
+
+/* Categories */
+.cats {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  margin-bottom: 28px;
+}
+.cats button {
+  border: 1px solid var(--line); background: var(--card);
+  color: var(--ink); border-radius: 999px;
+  padding: 8px 16px; font-size: 13px; font-weight: 600;
+  transition: .15s; display: inline-flex; align-items: center; gap: 6px;
+}
+.cats button:hover { border-color: var(--mut); }
+.cats button.on {
+  background: var(--acc); border-color: var(--acc); color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--acc) 35%, transparent);
+}
+
+/* Range */
+.rng {
+  display: none; gap: 10px; justify-content: center; align-items: center;
+  margin-bottom: 20px;
+}
+.rng.on { display: flex; }
+.rng input {
+  width: 88px; padding: 10px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  text-align: center; font: inherit; font-weight: 600;
+}
+.rng span { color: var(--mut); font-size: 13px; }
+
+/* Stage / Card */
+.stage-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 24px;
+}
+.stage {
+  perspective: 1200px;
+  width: min(78vw, 280px);
+  aspect-ratio: 5 / 7;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.in {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d; transition: transform .45s cubic-bezier(.2,.8,.2,1);
+}
+.in.down { transform: rotateY(180deg); }
+.f, .bk {
+  position: absolute; inset: 0; border-radius: 18px;
+  overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: var(--shadow);
+}
+.bk {
+  transform: rotateY(180deg);
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px; color: #fff; font-weight: 700;
+}
+.f svg { width: 100%; height: 100%; display: block; }
+.face {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 28px 18px 20px; text-align: center;
+}
+.face .top {
+  position: absolute; top: 14px;
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  opacity: .75; font-weight: 700;
+}
+.face small { opacity: .85; font-size: 12.5px; }
+.big { font-size: clamp(52px, 16vw, 82px); line-height: 1; font-weight: 800; }
+.mid { font-size: clamp(26px, 8vw, 38px); font-weight: 700; line-height: 1.15; }
+.txt { font-size: clamp(15px, 4.5vw, 19px); font-weight: 600; line-height: 1.35; }
+.ico { font-size: clamp(56px, 18vw, 88px); line-height: 1; }
+.ball {
+  width: 84px; height: 84px; border-radius: 50%;
+  border: 4px solid #222; background: linear-gradient(#e63946 46%, #222 46% 54%, #fff 54%);
+  position: relative; flex: none;
+}
+.ball::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 24px; height: 24px; margin: -12px; border-radius: 50%;
+  background: #fff; border: 4px solid #222;
+}
+.brimg {
+  max-width: 72%; max-height: 52%; object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.25));
+}
+.pokeimg {
+  max-width: 60%; max-height: 48%; object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+}
+.coinw { perspective: 600px; width: 140px; height: 140px; }
+.coin {
+  width: 140px; height: 140px; position: relative;
+  transform-style: preserve-3d;
+  animation: cf 1.25s cubic-bezier(.2,.7,.3,1) forwards;
+}
+.coin i {
+  position: absolute; inset: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px; font-style: normal; font-weight: 800;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: radial-gradient(circle at 35% 30%, #fff3a8, #f2c230 45%, #b57e00);
+  border: 6px solid #e0a81a;
+  box-shadow: inset 0 0 0 4px #fbe27a, 0 6px 14px rgba(0,0,0,.3);
+  color: #8a5a00;
+}
+.coin i + i { transform: rotateX(180deg); }
+@keyframes cf {
+  0% { transform: translateY(0) rotateX(0); }
+  50% { transform: translateY(-48px) rotateX(calc(var(--e) / 2)); }
+  100% { transform: translateY(0) rotateX(var(--e)); }
+}
+
+.go {
+  width: 100%; max-width: 300px;
+  padding: 15px 24px; font-size: 16px; font-weight: 700;
+  color: #fff; border-radius: 14px;
+  background: var(--ink);
+  box-shadow: 0 6px 20px rgba(26,26,28,.18);
+  transition: transform .12s, box-shadow .12s;
+}
+.go:active { transform: scale(.97); }
+.go:hover { box-shadow: 0 8px 28px rgba(26,26,28,.22); }
+
+#res {
+  font-size: 20px; font-weight: 700; margin: 16px 0 4px;
+  min-height: 28px; text-align: center;
+}
+#info { color: var(--mut); font-size: 13px; min-height: 18px; text-align: center; }
+@keyframes pop {
+  0% { transform: scale(.7); opacity: 0; }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pop { animation: pop .32s ease-out; }
+
+.hist {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+  margin-top: 18px; max-width: 520px;
+}
+.hist span {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 10px; padding: 5px 11px; font-size: 12px;
+}
+.actions {
+  display: flex; gap: 12px; justify-content: center; margin-top: 12px;
+}
+.lnk {
+  color: var(--mut); font-size: 12.5px; text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.lnk:hover { color: var(--ink); }
+
+/* About */
+.about {
+  background: var(--bg2); border-radius: 24px;
+  padding: 48px 32px; text-align: center; max-width: 640px; margin: 0 auto;
+}
+.about h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 28px; font-weight: 400; margin-bottom: 12px;
+}
+.about p { color: var(--mut); font-size: 15px; line-height: 1.6; margin-bottom: 8px; }
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 20px; text-align: center;
+  color: var(--mut); font-size: 13px;
+}
+.footer a { text-decoration: underline; text-underline-offset: 2px; }
+.footer a:hover { color: var(--ink); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .nav a:not(.mobile-show) { display: none; }
+  .hero { padding: 56px 16px 40px; }
+  .section { padding: 48px 16px; }
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="#inicio" class="logo" aria-label="Qué sale — inicio">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--acc)"/>
+        <path d="M10 12h12M10 16h8M10 20h10" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="22" cy="11" r="3.5" fill="#fff" opacity=".9"/>
+      </svg>
+      Qué sale
+    </a>
+    <nav class="nav">
+      <a href="#inicio" class="active">Inicio</a>
+      <a href="#generadores">Generadores</a>
+      <a href="#sobre">Sobre</a>
+      <button class="theme-btn" id="theme" aria-label="Cambiar tema" title="Tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section id="inicio" class="hero">
+    <div class="hero-badge">Azar · Decisión · Estilo</div>
+    <h1>El azar, <em>bien diseñado</em></h1>
+    <p>Cuando nadie se pone de acuerdo, cuando necesitas un empujón o simplemente quieres sorpresa. Un generador limpio, elegante y justo.</p>
+    <a href="#generadores" class="hero-cta">Empezar a sacar →</a>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section section-sm">
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🃏</div>
+        <h3>Decisiones claras</h3>
+        <p>Cartas, monedas, dados, sí/no y números. El resultado es instantáneo y neutral.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎮</div>
+        <h3>Juegos & cultura</h3>
+        <p>Brawlers, Pokémon, retos de fiesta, comida y más. Ideal para grupos y partidas.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✨</div>
+        <h3>Diseño propio</h3>
+        <p>Interfaz limpia, tipografía cuidada y animaciones sutiles. Sin ruido visual.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📱</div>
+        <h3>Todo en el dispositivo</h3>
+        <p>Funciona offline una vez cargado. Historial local y baraja que se agota de verdad.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATORS -->
+  <section id="generadores" class="section">
+    <div class="gen-head">
+      <h2>Elige qué sale</h2>
+      <p>Toca la carta o pulsa el botón. El azar hace el resto.</p>
+    </div>
+
+    <div class="cats" id="cats"></div>
+    <div class="rng" id="rng">
+      <input id="a" type="number" value="1" aria-label="Mínimo">
+      <span>a</span>
+      <input id="b" type="number" value="100" aria-label="Máximo">
+    </div>
+
+    <div class="stage-wrap">
+      <div class="stage" id="stage">
+        <div class="in down" id="in">
+          <div class="f" id="front"></div>
+          <div class="bk">?</div>
+        </div>
+      </div>
+      <button class="go" id="go">Sacar</button>
+      <div id="res">&nbsp;</div>
+      <div id="info"></div>
+      <div class="hist" id="hist"></div>
+      <div class="actions">
+        <button class="lnk" id="shuf">Barajar de nuevo</button>
+        <button class="lnk" id="clr">Borrar historial</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="sobre" class="section">
+    <div class="about">
+      <h2>Por qué existe Qué sale</h2>
+      <p>Nació para resolver discusiones de forma justa y con estilo. No es otro generador genérico: cada resultado tiene su propia carta, animación y personalidad.</p>
+      <p>Ideal para fiestas, partidas, decisiones diarias o cuando simplemente quieres que el azar decida por ti.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>Qué sale · Generador al azar · Hecho con cuidado · <a href="#inicio">Volver arriba</a></p>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s);
+const R = n => Math.random() * n | 0;
+const pick = a => a[R(a.length)];
+const KEY = 'queSale.v2';
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = R(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+let DB = { cat: 'poker', hist: [], a: 1, b: 100, theme: 'light' };
+let deck = [], busy = false;
+
+try { Object.assign(DB, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} };
+
+/* Theme */
+const applyTheme = t => {
+  document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+  DB.theme = t; save();
+};
+applyTheme(DB.theme || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'));
+$('#theme').onclick = () => applyTheme(DB.theme === 'dark' ? 'light' : 'dark');
+
+/* Categories */
+const CATS = [
+  ['poker', '🃏', 'Cartas'],
+  ['brawler', '🤠', 'Brawler'],
+  ['poke', '⚡', 'Pokémon'],
+  ['num', '🔢', 'Número'],
+  ['dado', '🎲', 'Dado'],
+  ['moneda', '🪙', 'Moneda'],
+  ['sino', '❓', 'Sí / No'],
+  ['reto', '🔥', 'Retos'],
+  ['comida', '🍕', 'Comida'],
+  ['animal', '🦊', 'Animales'],
+  ['color', '🎨', 'Color'],
+  ['emoji', '✨', 'Emoji'],
+  ['pais', '🌍', 'País'],
+  ['frase', '💬', 'Frase'],
+  ['nombre', '👤', 'Nombre'],
+  ['brawl', '🏆', 'Copas']
+];
+
+/* Poker SVG */
+const RK = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const RN = ['As','Dos','Tres','Cuatro','Cinco','Seis','Siete','Ocho','Nueve','Diez','Jota','Reina','Rey'];
+const SG = ['♠\uFE0E','♥\uFE0E','♦\uFE0E','♣\uFE0E'];
+const SN = ['picas','corazones','diamantes','tréboles'];
+const PIP = (() => {
+  const six = [[0,0],[2,0],[0,3],[2,3],[0,6],[2,6]];
+  const e = [[0,0],[2,0],[0,2],[2,2],[0,4],[2,4],[0,6],[2,6]];
+  return [[[1,3]],[[1,0],[1,6]],[[1,0],[1,3],[1,6]],[[0,0],[2,0],[0,6],[2,6]],[[0,0],[2,0],[1,3],[0,6],[2,6]],six,[...six,[1,1.5]],[...six,[1,1.5],[1,4.5]],[...e,[1,3]],[...e,[1,1],[1,5]]];
+})();
+function card(r, s) {
+  const c = s == 1 || s == 2 ? '#c41e3a' : '#1a1a1a';
+  const g = SG[s], X = [82, 125, 168], Y = y => 82 + y * 31.2;
+  let m = '';
+  if (r < 10) {
+    m = PIP[r].map(([x, y]) => {
+      const px = X[x], py = Y(y);
+      return `<text x="${px}" y="${py}" font-size="${r ? 46 : 100}" text-anchor="middle" dominant-baseline="central"${y > 3 ? ` transform="rotate(180 ${px} ${py})"` : ''}>${g}</text>`;
+    }).join('');
+  } else {
+    m = `<rect x="64" y="62" width="122" height="226" rx="8" fill="${c}" fill-opacity=".07" stroke="${c}" stroke-width="3"/><text x="125" y="98" font-size="36" text-anchor="middle" dominant-baseline="central">${['♞','♛','♚'][r-10]}\uFE0E</text><text x="125" y="180" font-size="116" font-weight="700" text-anchor="middle" dominant-baseline="central">${RK[r]}</text><text x="125" y="258" font-size="44" text-anchor="middle" dominant-baseline="central">${g}</text>`;
+  }
+  const cor = `<text x="26" y="46" font-size="${r == 9 ? 28 : 34}" font-weight="700" text-anchor="middle" letter-spacing="-2">${RK[r]}</text><text x="26" y="78" font-size="30" text-anchor="middle">${g}</text>`;
+  return `<svg viewBox="0 0 250 350" font-family="Georgia,'Times New Roman',serif" fill="${c}"><rect x="2" y="2" width="246" height="346" rx="18" fill="#fffdf8" stroke="#c8c4b8" stroke-width="2"/>${m}${cor}<g transform="rotate(180 125 175)">${cor}</g></svg>`;
+}
+
+/* Data */
+const RETOS = [
+  'Haz 20 flexiones ahora mismo','Habla con acento extranjero 10 minutos','Baila 1 minuto sin música',
+  'Llama a alguien que no veas hace meses','Cuenta un secreto vergonzoso','Imita a un famoso hasta que alguien lo adivine',
+  'Bébete un vaso de agua del tirón','Haz 30 sentadillas','Escribe un poema de 4 versos en 2 minutos',
+  'Canta el estribillo de tu canción favorita','No uses el móvil durante 1 hora','Dile algo bonito a la persona de tu izquierda',
+  'Aguanta 45 segundos en plancha','Habla en rima durante 3 turnos','Dibuja a alguien del grupo en 30 segundos',
+  'Come algo que nunca hayas probado','Haz reír a alguien en 1 minuto','Camina como un cangrejo hasta la puerta',
+  'Deja que el grupo te ponga un apodo','Cuenta hasta 50 de 3 en 3 sin fallar','Manda un emoji al azar a tu último chat',
+  'Haz de presentador del tiempo con lo que ves','Aguanta 30 segundos con cara de póker','Haz el sonido de 5 animales seguidos',
+  'Cuenta un chiste (malo vale)','Salta a la pata coja 10 veces','Habla 1 minuto sin usar la letra A',
+  'Presenta un objeto como si fuera un tesoro','Da un abrazo a quien tú elijas'
+];
+const ANIM = '🐶|Perro,🐱|Gato,🐭|Ratón,🐹|Hámster,🐰|Conejo,🦊|Zorro,🐻|Oso,🐼|Panda,🐨|Koala,🐯|Tigre,🦁|León,🐮|Vaca,🐷|Cerdo,🐸|Rana,🐵|Mono,🐔|Gallina,🐧|Pingüino,🦆|Pato,🦉|Búho,🦇|Murciélago,🐺|Lobo,🐴|Caballo,🦄|Unicornio,🐝|Abeja,🦋|Mariposa,🐢|Tortuga,🐍|Serpiente,🐙|Pulpo,🐬|Delfín,🐳|Ballena,🦈|Tiburón,🐘|Elefante,🦒|Jirafa,🦓|Cebra,🦘|Canguro,🦥|Perezoso,🦔|Erizo,🐊|Cocodrilo,🦩|Flamenco'.split(',');
+const COM = '🍕|Pizza,🍔|Hamburguesa,🌮|Tacos,🍣|Sushi,🍝|Pasta,🥗|Ensalada,🍜|Ramen,🥘|Paella,🌯|Burrito,🥪|Bocadillo,🍗|Pollo frito,🥩|Chuletón,🍛|Curry,🥟|Empanadillas,🍟|Patatas fritas,🥙|Kebab,🍳|Tortilla,🍲|Cocido,🍦|Helado,🍩|Donut,🥐|Croissant'.split(',');
+const PK = 'Bulbasaur,Ivysaur,Venusaur,Charmander,Charmeleon,Charizard,Squirtle,Wartortle,Blastoise,Caterpie,Metapod,Butterfree,Weedle,Kakuna,Beedrill,Pidgey,Pidgeotto,Pidgeot,Rattata,Raticate,Spearow,Fearow,Ekans,Arbok,Pikachu,Raichu,Sandshrew,Sandslash,Nidoran♀,Nidorina,Nidoqueen,Nidoran♂,Nidorino,Nidoking,Clefairy,Clefable,Vulpix,Ninetales,Jigglypuff,Wigglytuff,Zubat,Golbat,Oddish,Gloom,Vileplume,Paras,Parasect,Venonat,Venomoth,Diglett,Dugtrio,Meowth,Persian,Psyduck,Golduck,Mankey,Primeape,Growlithe,Arcanine,Poliwag,Poliwhirl,Poliwrath,Abra,Kadabra,Alakazam,Machop,Machoke,Machamp,Bellsprout,Weepinbell,Victreebel,Tentacool,Tentacruel,Geodude,Graveler,Golem,Ponyta,Rapidash,Slowpoke,Slowbro,Magnemite,Magneton,Farfetch’d,Doduo,Dodrio,Seel,Dewgong,Grimer,Muk,Shellder,Cloyster,Gastly,Haunter,Gengar,Onix,Drowzee,Hypno,Krabby,Kingler,Voltorb,Electrode,Exeggcute,Exeggutor,Cubone,Marowak,Hitmonlee,Hitmonchan,Lickitung,Koffing,Weezing,Rhyhorn,Rhydon,Chansey,Tangela,Kangaskhan,Horsea,Seadra,Goldeen,Seaking,Staryu,Starmie,Mr. Mime,Scyther,Jynx,Electabuzz,Magmar,Pinsir,Tauros,Magikarp,Gyarados,Lapras,Ditto,Eevee,Vaporeon,Jolteon,Flareon,Porygon,Omanyte,Omastar,Kabuto,Kabutops,Aerodactyl,Snorlax,Articuno,Zapdos,Moltres,Dratini,Dragonair,Dragonite,Mewtwo,Mew'.split(',');
+const PAISES = 'España|🇪🇸,México|🇲🇽,Argentina|🇦🇷,Colombia|🇨🇴,Chile|🇨🇱,Perú|🇵🇪,Francia|🇫🇷,Italia|🇮🇹,Japón|🇯🇵,Corea del Sur|🇰🇷,Brasil|🇧🇷,Estados Unidos|🇺🇸,Canadá|🇨🇦,Alemania|🇩🇪,Reino Unido|🇬🇧,Portugal|🇵🇹,Australia|🇦🇺,India|🇮🇳,China|🇨🇳,Egipto|🇪🇬,Marruecos|🇲🇦,Turquía|🇹🇷,Grecia|🇬🇷,Suecia|🇸🇪,Noruega|🇳🇴,Islandia|🇮🇸,Nueva Zelanda|🇳🇿,Tailandia|🇹🇭,Vietnam|🇻🇳,Sudáfrica|🇿🇦'.split(',');
+const FRASES = [
+  'El mejor momento para empezar era ayer. El segundo mejor es ahora.',
+  'No hace falta ser perfecto para empezar, pero hay que empezar para ser bueno.',
+  'La suerte favorece a quienes se atreven.',
+  'Hoy es un buen día para hacer algo que te asuste un poco.',
+  'Las mejores historias empiezan con “¿y si…?”.',
+  'No cuentes los días, haz que los días cuenten.',
+  'La curiosidad es el motor de todo lo interesante.',
+  'Un pequeño paso hoy vale más que un gran plan mañana.',
+  'El azar solo abre puertas. Tú decides entrar.',
+  'Si no lo intentas, el resultado siempre es cero.',
+  'La constancia vence al talento cuando el talento no es constante.',
+  'A veces el “no” más importante es el que te das a ti mismo.',
+  'Hazlo con estilo o no lo hagas.',
+  'La mejor decisión es la que tomas y defiendes.',
+  'Menos excusas, más acción.'
+];
+const NOMBRES = [
+  'Lucía','Martín','Sofía','Hugo','María','Leo','Emma','Pablo','Julia','Daniel',
+  'Carla','Álvaro','Valeria','Mateo','Paula','Adrián','Claudia','Diego','Irene','Javier',
+  'Ana','Sergio','Elena','Carlos','Laura','Alejandro','Marta','David','Carmen','Miguel'
+];
+const EMOJIS = '😀,😂,🥰,😎,🤩,🥳,🤯,😈,👻,🤖,👽,🐱,🐶,🦊,🐼,🦁,🐸,🦄,🔥,⭐,💫,🌈,🍕,🌮,🍣,🎮,🎯,🏆,💎,🚀,🌙,☀️,🌊,🍀,🎭,🎨,🎵,📚,💡,🔑'.split(',');
+
+/* Brawlers — lista base + fetch oficial */
+const BRF = 'Shelly,Colt,Bull,Brock,Rico,Spike,Barley,Jessie,Nita,Dynamike,El Primo,Mortis,Crow,Poco,Bo,Piper,Pam,Tara,Darryl,Penny,Frank,Gene,Tick,Leon,Rosa,Carl,Bibi,8-Bit,Sandy,Bea,Emz,Mr. P'.split(',');
+let BR = BRF.map((n, i) => ({
+  n,
+  img: `https://cdn.brawlify.com/brawlers/borderless/${16000000 + i}.png`,
+  c: '#5b4dcf',
+  r: ''
+}));
+const tc = s => s === s.toUpperCase() ? s.toLowerCase().replace(/\b\w/g, m => m.toUpperCase()) : s;
+fetch('https://api.brawlapi.com/v1/brawlers')
+  .then(r => r.json())
+  .then(d => {
+    const l = (d.list || []).filter(b => b.name && (b.imageUrl2 || b.imageUrl));
+    if (l.length > 20) {
+      BR = l.map(b => ({
+        n: tc(b.name),
+        img: b.imageUrl2 || b.imageUrl || `https://cdn.brawlify.com/brawlers/borderless/${b.id}.png`,
+        c: (b.rarity && b.rarity.color) || '#5b4dcf',
+        r: (b.rarity && b.rarity.name) || ''
+      }));
+    }
+  })
+  .catch(() => {});
+
+const hx = (h, s, l) => {
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return '#' + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, '0')).join('');
+};
+
+const face = (bg, fg, top, main, sub) =>
+  `<div class="face" style="background:${bg};color:${fg}"><div class="top">${top}</div>${main}<small>${sub || ''}</small></div>`;
+
+const GEN = {
+  poker() {
+    if (!deck.length) deck = shuffle([...Array(52).keys()]);
+    const k = deck.pop(), r = k % 13, s = k / 13 | 0;
+    return { h: card(r, s), t: RN[r] + ' de ' + SN[s], i: deck.length + ' cartas restantes' };
+  },
+  brawler() {
+    const b = pick(BR);
+    return {
+      h: face(`linear-gradient(165deg,${b.c},#1a1a2e)`, '#fff', 'Brawl Stars',
+        `<img class="brimg" alt="${b.n}" src="${b.img}" loading="lazy"
+          onerror="this.onerror=null;this.src='https://cdn.brawlify.com/brawlers/borderless/16000000.png';this.onerror=()=>this.outerHTML='<span class=ico>🤠</span>'">
+         <b class="mid">${b.n}</b>`, b.r),
+      t: b.n + (b.r ? ' · ' + b.r : '')
+    };
+  },
+  poke() {
+    const n = R(151) + 1, nm = PK[n - 1], id = '#' + String(n).padStart(3, '0');
+    const h = n * 37 % 360;
+    return {
+      h: face(`linear-gradient(160deg,hsl(${h} 60% 45%),hsl(${(h + 40) % 360} 55% 28%))`, '#fff', 'Pokémon',
+        `<div class="ball"></div>
+         <img class="pokeimg" alt="${nm}" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${n}.png"
+           loading="lazy" onerror="this.remove()" onload="this.previousElementSibling?.remove()">
+         <b class="mid">${nm}</b>`, id),
+      t: nm + ' ' + id
+    };
+  },
+  num() {
+    let a = Math.round(+$('#a').value || 0), b = Math.round(+$('#b').value || 0);
+    if (a > b) [a, b] = [b, a];
+    const n = a + R(b - a + 1);
+    DB.a = a; DB.b = b;
+    return { h: face('linear-gradient(135deg,#5b4dcf,#e85d3a)', '#fff', 'Número', `<b class="big">${n}</b>`, 'entre ' + a + ' y ' + b), t: '' + n };
+  },
+  brawl() {
+    const n = R(1001);
+    return { h: face('linear-gradient(160deg,#f5c518,#e07b00)', '#2a1a00', 'Copas Brawl', `<span class="ico">🏆</span><b class="big">${n}</b>`, 'copas'), t: n + ' copas' };
+  },
+  reto() {
+    const t = pick(RETOS);
+    return { h: face('linear-gradient(160deg,#e5484d,#6b1f9a)', '#fff', 'Reto', `<span class="ico">🔥</span><b class="txt">${t}</b>`), t };
+  },
+  color() {
+    const h = R(360), s = 40 + R(50), l = 28 + R(48);
+    const hex = hx(h, s, l).toUpperCase();
+    const nm = h < 15 || h >= 345 ? 'rojo' : h < 45 ? 'naranja' : h < 70 ? 'amarillo' : h < 160 ? 'verde' : h < 200 ? 'turquesa' : h < 255 ? 'azul' : h < 290 ? 'violeta' : 'rosa';
+    const tn = l < 38 ? ' oscuro' : l > 65 ? ' claro' : '';
+    return { h: face(hex, l > 55 ? '#111' : '#fff', 'Color', `<b class="mid">${hex}</b>`, nm + tn), t: hex + ' · ' + nm + tn };
+  },
+  animal() {
+    const [e, n] = pick(ANIM).split('|');
+    return { h: face('linear-gradient(160deg,#1f9d63,#0d4d32)', '#fff', 'Animal', `<span class="ico">${e}</span><b class="mid">${n}</b>`), t: e + ' ' + n };
+  },
+  sino() {
+    const y = R(2);
+    return { h: face(y ? '#1f9d63' : '#e5484d', '#fff', 'Decisión', `<b class="big">${y ? 'SÍ' : 'NO'}</b>`), t: y ? 'Sí' : 'No' };
+  },
+  moneda() {
+    const c = R(2);
+    return {
+      h: face('linear-gradient(160deg,#1a2438,#0c101c)', '#fff', 'Moneda',
+        `<div class="coinw"><div class="coin" style="--e:${c ? 1980 : 1800}deg"><i>😀</i><i>✚</i></div></div>`,
+        'Cara 😀 · Cruz ✚'),
+      t: c ? 'Cruz' : 'Cara', d: 1300
+    };
+  },
+  dado() {
+    const n = R(6);
+    return { h: face('linear-gradient(160deg,#fff,#ebe7de)', '#1a1a1c', 'Dado', `<b class="big" style="font-size:clamp(88px,28vw,130px)">${'⚀⚁⚂⚃⚄⚅'[n]}\uFE0E</b>`, '' + (n + 1)), t: '' + (n + 1) };
+  },
+  comida() {
+    const [e, n] = pick(COM).split('|');
+    return { h: face('linear-gradient(160deg,#ff8c3a,#d03a12)', '#fff', '¿Qué comemos?', `<span class="ico">${e}</span><b class="mid">${n}</b>`), t: e + ' ' + n };
+  },
+  emoji() {
+    const e = pick(EMOJIS);
+    return { h: face('linear-gradient(160deg,#2d2a4a,#1a1830)', '#fff', 'Emoji', `<span class="ico">${e}</span>`), t: e };
+  },
+  pais() {
+    const [n, e] = pick(PAISES).split('|');
+    return { h: face('linear-gradient(160deg,#1e4d8c,#0d2a4a)', '#fff', 'País', `<span class="ico">${e}</span><b class="mid">${n}</b>`), t: e + ' ' + n };
+  },
+  frase() {
+    const t = pick(FRASES);
+    return { h: face('linear-gradient(160deg,#3d2b6b,#1e1538)', '#fff', 'Frase', `<b class="txt">${t}</b>`), t };
+  },
+  nombre() {
+    const n = pick(NOMBRES);
+    return { h: face('linear-gradient(160deg,#2a6b5a,#0f3d32)', '#fff', 'Nombre', `<b class="mid">${n}</b>`), t: n };
+  }
+};
+
+/* UI */
+function rh() {
+  $('#hist').innerHTML = DB.hist.map(h => `<span>${h.e} ${h.t}</span>`).join('');
+}
+function setCat(id, reset) {
+  if (!CATS.some(c => c[0] === id)) id = 'poker';
+  DB.cat = id;
+  document.querySelectorAll('#cats button').forEach(b => b.classList.toggle('on', b.dataset.c === id));
+  $('#rng').classList.toggle('on', id === 'num');
+  $('#shuf').style.display = id === 'poker' ? '' : 'none';
+  if (reset) {
+    $('#in').classList.add('down');
+    $('#res').textContent = '\u00a0';
+    $('#info').textContent = '';
+    $('#go').textContent = (id === 'sino' || id === 'moneda') ? 'Decidir' : 'Sacar';
+  }
+  save();
+}
+function draw() {
+  if (busy) return;
+  busy = true;
+  const inn = $('#in');
+  inn.classList.add('down');
+  $('#res').textContent = '\u00a0';
+  $('#info').textContent = '';
+  if (navigator.vibrate) navigator.vibrate(12);
+  setTimeout(() => {
+    const r = GEN[DB.cat]();
+    const res = $('#res');
+    $('#front').innerHTML = r.h;
+    inn.classList.remove('down');
+    const fin = () => {
+      res.textContent = r.t;
+      res.classList.remove('pop');
+      void res.offsetWidth;
+      res.classList.add('pop');
+      $('#info').textContent = r.i || '';
+      DB.hist.unshift({ e: CATS.find(c => c[0] === DB.cat)[1], t: r.t });
+      DB.hist = DB.hist.slice(0, 14);
+      save();
+      rh();
+      busy = false;
+    };
+    r.d ? setTimeout(fin, r.d) : fin();
+  }, 400);
+}
+
+CATS.forEach(([id, e, n]) => {
+  const b = document.createElement('button');
+  b.dataset.c = id;
+  b.innerHTML = `${e} ${n}`;
+  b.onclick = () => setCat(id, true);
+  $('#cats').append(b);
+});
+
+$('#a').value = DB.a;
+$('#b').value = DB.b;
+$('#go').onclick = draw;
+$('#stage').onclick = draw;
+$('#shuf').onclick = () => { deck = []; $('#info').textContent = 'Baraja nueva · 52 cartas'; };
+$('#clr').onclick = () => { DB.hist = []; save(); rh(); };
+
+addEventListener('keydown', e => {
+  if (/INPUT|BUTTON|A/.test(e.target.tagName)) return;
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); draw(); }
+});
+
+/* Active nav */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav a');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
+    }
+  });
+}, { rootMargin: '-40% 0px -50% 0px' });
+sections.forEach(s => obs.observe(s));
+
+setCat(DB.cat, true);
+rh();
+</script>
+</body>
+</html>
